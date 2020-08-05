@@ -1,5 +1,5 @@
 #import
-import random as r
+import random as rd
 import numpy as np
 from operator import itemgetter
 import math
@@ -48,13 +48,12 @@ def descen_create(stack,dnn_list):
     num_dnn = len(stack)
     #int(num_dnn/5-1)
     for i in range(10):
-        descen_hidden_list.append(stck[i][2])
+        descen_hidden_list.append(stck[-10:][i][2])
     descen_hidden_mean = mean(descen_hidden_list)
     descen_hidden_standardDeviation = standardDerivation(descen_hidden_list,0)   
-    descen_new = []
-    for i in range(int(num_dnn/3-1)):
+    for t in range(int(num_dnn/3-1)):
         descen_hidden = int(descen_hidden_standardDeviation * np.random.randn() + descen_hidden_mean)
-        descen_neural_sample_1, descen_neural_sample_2 = r.sample(stck[0:10],2)
+        descen_neural_sample_1, descen_neural_sample_2 = rd.sample(stck[-10:],2)
         descen_neural = []
         ln1,ln2 = [len(descen_neural_sample_1),len(descen_neural_sample_2)]
         s,m = [ln2,ln1] if ln1>ln2 else [ln1,ln2]
@@ -65,8 +64,8 @@ def descen_create(stack,dnn_list):
                                          + mean([descen_neural_sample_1[i],descen_neural_sample_2[i]])))
             else:
                 descen_neural.append(s_sample[i])
-        dnn_list[int(stck[-i-1][0])] = custom_dnn(descen_neural,descen_hidden)
-        update_stack(stack,int(stck[-i-1][0]),descen_neural,descen_hidden)
+        dnn_list[int(stck[t][0])] = custom_dnn(descen_neural,descen_hidden)
+        update_stack(stack,int(stck[t][0]),descen_neural,descen_hidden)
     reset_stack(stack)
     
 #stack create,reset,update 
@@ -87,11 +86,13 @@ def update_stack(stack,position,neural,hidden):
     stack[position][2] = hidden
     stack[position][3] = 0
     
-# accuracy,speed - stack(rd) return, if num = 2 then test two simultaneously
-def gene_stack(reward,rd,num = 1):
+# 50% - stack
+# accuracy,speed - stack(r) return, if num = 2 then test two simultaneously
+#reward 0:neural_num 1:time_reward 2:accuracy_reward 3: ...
+def gene_stack(reward,r,num = 1):
     for i in range(num):
-        rd = sorted(reward, key=itemgetter(i+1))
-        stack = np.zeros(len(reward_time))
-        for i in rd:
-            stack[int(i[0])] += i
+        rewd = sorted(reward, key=itemgetter(i+1))
+        stack = np.zeros(len(reward))
+        for i in rewd[0:int(num_dnn/2)]:
+            stack[int(i[0])] += r
     return stack
