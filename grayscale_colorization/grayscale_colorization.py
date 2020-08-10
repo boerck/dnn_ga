@@ -53,6 +53,4 @@ def imshow(img):
 # 이미지 보여주기
 imshow(torchvision.utils.make_grid(data['image'][3]))
 # 정답(label) 출력
-print(' '.join('%5s' % classes[b[0]]))
-
-imshow(torchvision.utils.make_grid(data['label'][3]))
+print(' '.join('%5s' % classes[data['label'][3]]))
