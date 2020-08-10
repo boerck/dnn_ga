@@ -133,3 +133,6 @@ dmypy.json
 
 #boerck test file
 test_boerck.py
+
+#grayscale colorization
+grayscale_colorization/data
