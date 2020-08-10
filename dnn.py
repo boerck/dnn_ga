@@ -32,14 +32,11 @@ class Net(nn.Module):
         x = F.relu(self.fc5(x))
         x = self.fc6(x)
         return x
-   # backward는 자동으로 정의됨 
 net = Net()
-# 학습률은 얼마로? 일단 0.005로 잡고 시작함
-# momentum 은 일단 0.9로 잡음
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr = 0.005, momentum = 0.9)
 
-# 학습하기
+# training
 epoch = 100
 for i in range(epoch):
     running_loss = 0
