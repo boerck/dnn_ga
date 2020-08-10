@@ -4,4 +4,4 @@ dnn_ga
 Hansung Sciennce High School 2020 Project
 
 ## How to use
-* Please use Python >= 3.7
+* Prefer Python 3.7 (Python 3.8.5 has iterator problem)
