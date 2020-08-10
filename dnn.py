@@ -6,9 +6,8 @@ from torchvision import datasets, transforms
 
 
 class Net(nn.Module):
-    def __init__(self, batch_size, layer_n, neuron_info, hin=32*32, hout=10):
+    def __init__(self, layer_n, neuron_info, hin=32*32, hout=10):
         """
-        :param batch_size: batch_size
         :param layer_n: hidden layer number
         :param neuron_info: The number of each neuron placed on the hidden layer
         :param hin: input number
@@ -33,26 +32,27 @@ class Net(nn.Module):
         return x
 
 
-net = Net()
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr = 0.005, momentum = 0.9)
+def run():
+    net = Net()
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-# 학습
-epoch = 50
-for i in range(epoch):
-    running_loss = 0
-    for ind in range((len(data['image']))):
-        inputs = data['image'][ind]
-        labels = data['label'][ind]
-        optimizer.zero_grad()
-        
-        outputs = net(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        
-        running_loss += loss.item()
-        if i % 5 == 0 and ind == 9:
-            print('epoch : [%d] loss: %.3f' % (i, running_loss))
+    # 학습
+    epoch = 50
+    for i in range(epoch):
         running_loss = 0.0
-print('Finish')
+        for ind in range((len(data['image']))):
+            inputs = data['image'][ind]
+            labels = data['label'][ind]
+            optimizer.zero_grad()
+
+            outputs = net(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+            if i % 5 == 0 and ind == 9:
+                print('epoch : [%d] loss: %.3f' % (i, running_loss))
+            running_loss = 0.0
+    print('Finish')
