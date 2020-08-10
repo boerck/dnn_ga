@@ -1,11 +1,13 @@
 import pickle
 
-def save(name1:str, data:dict):
-    with open (str('img/'+name1+'.bin'), 'wb') as f:
-        pickle.dump(data,f)
 
-def load(name1:str, batch_size=1):
-    with open (str('img/'+name1+'.bin'), 'rb') as f:
+def save(name1: str, data:dict):
+    with open(str('img/'+name1+'.bin'), 'wb') as f:
+        pickle.dump(data, f)
+
+
+def load(name1: str, batch_size=1):
+    with open(str('img/'+name1+'.bin'), 'rb') as f:
         loaded_data = pickle.load(f)
 
     data = {'image': [], 'label': []}

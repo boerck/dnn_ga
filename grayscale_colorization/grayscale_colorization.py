@@ -21,6 +21,6 @@ for a in range(50000) :
     
     for i in range(1024) :
         #Y = 0.299 * R + 0.587 * G + 0.114 * B
-        data['image'][a][i//32][i%32] = 0.299 * images[a][0][i//32][i%32] + 0.587 * images[a][1][i//32][i%32] + \
-        0.114 * images[a][2][i//32][i%32]
+        data['image'][a][i//32][i % 32] = 0.299 * images[a][0][i//32][i % 32] + 0.587 * images[a][1][i//32][i % 32] + \
+        0.114 * images[a][2][i//32][i % 32]
     data['label'][a] = labels

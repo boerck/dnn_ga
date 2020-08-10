@@ -1,6 +1,9 @@
-def Call_GrayCIFAR10(link, batch_size = 1):
-    import pickle
-    import torch
+import pickle
+import torch
+
+
+def Call_GrayCIFAR10(link, batch_size=1):
+
     with open(file, 'rb') as fo:
         loaded_data = pickle.load(fo, encoding='bytes')
     
