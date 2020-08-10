@@ -14,46 +14,39 @@ class Net(nn.Module):
         # for i in range(len(layer_n)):
         #     globals()['self.fc{}'.format(i)] = layer_info[i]
 
-        self.fc1 = nn.Linear(hin, 512)
-        self.fc2 = nn.Linear(512, 256)
-        self.fc3 = nn.Linear(256, 128)
-        self.fc4 = nn.Linear(128, 64)
-        self.fc5 = nn.Linear(64, 32)
-        self.fc6 = nn.Linear(32, 10)
+        self.fc1 = nn.Linear(hin, 256)
+        self.fc2 = nn.Linear(256, 64)
+        self.fc3 = nn.Linear(64, 16)
+        self.fc4 = nn.Linear(16, 10)
         
     # 순전파
     def forward(self, x): 
-        # ReLu function 사용
         x = x.view(-1, hin)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        x = F.relu(self.fc4(x))
-        x = F.relu(self.fc5(x))
-        x = self.fc6(x)
+        x = self.fc4(x)
         return x
 net = Net()
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr = 0.005, momentum = 0.9)
 
-# training
-epoch = 100
+# 학습
+epoch = 50
 for i in range(epoch):
     running_loss = 0
     for ind in range((len(data['image']))):
         inputs = data['image'][ind]
         labels = data['label'][ind]
-        
         optimizer.zero_grad()
         
         outputs = net(inputs)
-        print('outputs:',outputs)
-        print('labels:',labels)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
         
         running_loss += loss.item()
-        print('[%d, %5d] loss: %.3f' % (i + 1, ind + 1, running_loss / 2000))
+        if i % 5 == 0 and ind == 9 : 
+            print('epoch : [%d] loss: %.3f' % (i, running_loss))
         running_loss = 0.0
 print('Finish')
