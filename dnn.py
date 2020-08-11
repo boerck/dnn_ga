@@ -15,8 +15,8 @@ class Net(nn.Module):
         :param train_data: train_dataset, type : array
         :param test_data: test_dataset, type : array
         :param epoch: Learning iterations, type : int
-        :param hin: input number, type : int
-        :param hout: output number, type : int
+        :param hin: input number
+        :param hout: output number
         """
         super(Net, self).__init__()
         self.hin = hin
@@ -39,7 +39,7 @@ class Net(nn.Module):
             x = F.relu(getattr(self, "fc{}".format(str(i+1)))(x))
         x = getattr(self, "fc{}".format(str(self.layer_n+1)))(x)
         return x
-
+    
     def run(self):
         """
         :return: layer_n;type(int), neuron_info;type(list), batch_size;type(int),
@@ -48,7 +48,7 @@ class Net(nn.Module):
         net = Net(self.layer_n, self.neuron_info, self.train_data, self.test_data, self.epoch, hin=32*32, hout=10)
         net.to(device)
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+        optimizer = optim.SGD(net.parameters(), lr=0.005, momentum=0.9)
         batch_size = len(self.train_data['image'][0])
         
         # 학습
@@ -59,7 +59,6 @@ class Net(nn.Module):
                 inputs = self.train_data['image'][j].to(device)
                 labels = self.train_data['label'][j].to(device)
                 optimizer.zero_grad()
-
                 outputs = net(inputs)
                 loss = criterion(outputs, labels)
                 loss.backward()
@@ -85,7 +84,10 @@ class Net(nn.Module):
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
         accuracy = correct / total
-        print('Accuracy of the network: %d' % accuracy)  # max는 1, min은 0
         test_end = time.time_ns()
         test_time = test_end-test_start
-        return self.layer_n, self.neuron_info, batch_size, accuracy, train_time, test_time
+        print('\n<RESULT>')
+        print('Numbers of hidden layer :',self.layer_n,'\nNeuron Structure :', self.neuron_info, 
+              '\nBatch size:', batch_size, '\nAccuracy of the network :', accuracy*100, '%\nTrain Time :',train_time, 
+              's, \nTest Time :',test_time,'ns')
+    
