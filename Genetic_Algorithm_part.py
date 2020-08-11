@@ -1,4 +1,3 @@
-# import
 import random as rd
 import numpy as np
 from operator import itemgetter
@@ -11,16 +10,8 @@ def mean(values):  # math function
     return sum(values, 0.0) / len(values)
 
 
-def standardDeviation(values, option=0):
-    if len(values) < 2:
-        return None
-    sum = 0.0
-    meanValue = mean(values)
-    for i in range(0, len(values)):
-        diff = values[i] - meanValue
-        sum += diff * diff
-    sd = math.sqrt(sum / (len(values) - option))
-    return sd
+def standardDeviation(values):
+    return np.std(values)
 
 
 class custom_dnn:  # dnn class_Makeshift
