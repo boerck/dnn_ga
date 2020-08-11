@@ -5,9 +5,7 @@ import math
 
 
 def mean(values):  # math function
-    if len(values) == 0:
-        return None
-    return sum(values, 0.0) / len(values)
+    return np.mean(values)
 
 
 def standardDeviation(values):
