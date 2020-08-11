@@ -1,11 +1,11 @@
-def grayscale(train = True):
+def grayscale(train: bool):
     import torch
     import torchvision
     import torchvision.transforms as transforms
 
-    if train:
+    if train: #train data set
         batch_size = 50000
-    else:
+    else:   #test data set
         batch_size = 10000
     
     transform = transforms.Compose(

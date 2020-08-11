@@ -1,6 +1,10 @@
 #import Genetic_Algorithm_part as gap
 import dnn
-from grayscale_colorization import binary_util
+from grayscale_colorization import binary_util, grayscale_colorization
+
+binary_util.save("data_batch_train", grayscale_colorization.grayscale(True))
+binary_util.save("data_batch_test", grayscale_colorization.grayscale(False))
+#binary save
 
 train_data = binary_util.load("data_batch_train", 1)
 test_data = binary_util.load("data_batch_test", 1)
