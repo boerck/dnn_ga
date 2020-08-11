@@ -1,6 +1,8 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+import time
 
 
 class Net(nn.Module):
@@ -31,11 +33,21 @@ class Net(nn.Module):
 
 
 def run(layer_n, neuron_info, train_data, test_data, epoch):
+    """
+    :param layer_n: hidden layer number, type : int
+    :param neuron_info: The number of each neuron placed on the hidden layer, type : list
+    :param train_data: train_dataset, type : array
+    :param test_data: test_dataset, type : array
+    :param epoch: Learning iterations, type : int
+    :return: layer_n;type(int), neuron_info;type(list), batch_size;type(int),
+            accuracy;type(float), train_time;type(float);unit(s), test_time;type(int);unit(ns)
+    """
     net = Net(layer_n, neuron_info, hin=32*32, hout=10)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-
+    batch_size = len(train_data['image'][0])
     # 학습
+    train_start = time.time()
     for i in range(epoch):
         running_loss = 0.0
         for j in range((len(train_data))):
@@ -49,8 +61,26 @@ def run(layer_n, neuron_info, train_data, test_data, epoch):
             optimizer.step()
 
             running_loss += loss.item()
-            if i % 10 == 0 and j == 9:
-                print('epoch : [%d] loss: %.3f' % (i, running_loss))
+            if j % 10 == 0:
+                print('epoch : [%d] loss: %.3f' % (i+1, running_loss / 10))
                 running_loss = 0.0
+    train_end = time.time()
+    train_time = train_end-train_start
 
-    return layer_n, neuron_info
+    # 평가
+    test_start = time.time_ns()
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for data in test_data:
+            inputs = train_data['image'][data]
+            labels = train_data['label'][data]
+            outputs = net(inputs)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    accuracy = correct / total
+    print('Accuracy of the network: %d' % accuracy)  # max는 1, min은 0
+    test_end = time.time_ns()
+    test_time = test_end-test_start
+    return layer_n, neuron_info, batch_size, accuracy, train_time, test_time
