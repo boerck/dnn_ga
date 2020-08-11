@@ -8,13 +8,14 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 class Net(nn.Module):
-    def __init__(self, layer_n, neuron_info, train_data, test_data, epoch, hin=32*32, hout=10):
+    def __init__(self, layer_n, neuron_info, train_data, test_data, epoch, lr, hin=32*32, hout=10):
         """
         :param layer_n: hidden layer number
         :param neuron_info: The number of each neuron placed on the hidden layer
         :param train_data: train_dataset, type : array
         :param test_data: test_dataset, type : array
         :param epoch: Learning iterations, type : int
+        :param lr : Learning rate
         :param hin: input number
         :param hout: output number
         """
@@ -25,6 +26,7 @@ class Net(nn.Module):
         self.train_data = train_data
         self.test_data = test_data
         self.epoch = epoch
+        self.lr = lr
         neuron_info.insert(0, self.hin)
         neuron_info.append(hout)
         k = 0
@@ -39,16 +41,16 @@ class Net(nn.Module):
             x = F.relu(getattr(self, "fc{}".format(str(i+1)))(x))
         x = getattr(self, "fc{}".format(str(self.layer_n+1)))(x)
         return x
-
+    
     def run(self):
         """
-        :return: layer_n;type(int), neuron_info;type(list), batch_size;type(int),
+        :return: layer_n;type(int), neuron_info;type(list), batch_size;type(int), lr;type(float)
                 accuracy;type(float), train_time;type(float);unit(s), test_time;type(int);unit(ns)
         """
-        net = Net(self.layer_n, self.neuron_info, self.train_data, self.test_data, self.epoch, hin=32*32, hout=10)
+        net = Net(self.layer_n, self.neuron_info, self.train_data, self.test_data, self.epoch, self.lr, hin=32*32, hout=10)
         net.to(device)
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+        optimizer = optim.SGD(net.parameters(), lr=self.lr, momentum=0.9)
         batch_size = len(self.train_data['image'][0])
         
         # 학습
@@ -89,7 +91,8 @@ class Net(nn.Module):
         test_end = time.time_ns()
         test_time = test_end-test_start
         return self.layer_n, self.neuron_info, batch_size, accuracy, train_time, test_time
-
+    
+   
 # 실행
-nen = Net(4, [32*32, 256, 64, 16, 10], data, data, 100)
+nen = Net(4, [32*32, 256, 64, 16, 10], data, data, 100, 0.005)
 nen.run()
