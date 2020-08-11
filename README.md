@@ -4,11 +4,11 @@ dnn_ga
 Hansung Science High School 2020 Club Project<br/>
 
 
-## How to use
+### How to use
 * Please use Python version >= 3.7
 * Pytorch version >= 1.5.0
 
-## Club Fossil
+### Club Fossil
 한성과학고등학교 2020년 1학기 인공지능개발반
 * 동아리장 및 레포지토리 관리: 오혁재
 * 테스트용 이미지 흑백화 및 처리
