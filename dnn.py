@@ -1,8 +1,6 @@
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from torchvision import datasets, transforms
 
 
 class Net(nn.Module):
@@ -32,18 +30,17 @@ class Net(nn.Module):
         return x
 
 
-def run():
-    net = Net()
+def run(layer_n, neuron_info, train_data, test_data, epoch):
+    net = Net(layer_n, neuron_info, hin=32*32, hout=10)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
     # 학습
-    epoch = 50
     for i in range(epoch):
         running_loss = 0.0
-        for ind in range((len(data['image']))):
-            inputs = data['image'][ind]
-            labels = data['label'][ind]
+        for j in range((len(train_data))):
+            inputs = train_data['image'][j]
+            labels = train_data['label'][j]
             optimizer.zero_grad()
 
             outputs = net(inputs)
@@ -52,7 +49,8 @@ def run():
             optimizer.step()
 
             running_loss += loss.item()
-            if i % 5 == 0 and ind == 9:
+            if i % 10 == 0 and j == 9:
                 print('epoch : [%d] loss: %.3f' % (i, running_loss))
-            running_loss = 0.0
-    print('Finish')
+                running_loss = 0.0
+
+    return layer_n, neuron_info
