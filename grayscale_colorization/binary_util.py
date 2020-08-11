@@ -13,7 +13,7 @@ def load(name1: str, batch_size=1):
     data = {'image': [], 'label': []}
     
     for i in range(len(loaded_data['image']) // batch_size):   #batch_size에 맞게 변환
-        data['image'].append(loaded_data['image'][i * batch_size: (i + 1) * batch_size])
+        data['image'].append(torch.reshape(loaded_data['image'][i * batch_size: (i + 1) * batch_size], (batch_size,1024)))
+        #2차원 tensor로 변환
         data['label'].append(loaded_data['label'][i * batch_size: (i + 1) * batch_size])
-
     return data
