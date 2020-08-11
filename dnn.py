@@ -4,6 +4,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 import time
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 
 class Net(nn.Module):
     def __init__(self, layer_n, neuron_info, hin=32*32, hout=10):
@@ -43,6 +45,7 @@ def run(layer_n, neuron_info, train_data, test_data, epoch):
             accuracy;type(float), train_time;type(float);unit(s), test_time;type(int);unit(ns)
     """
     net = Net(layer_n, neuron_info, hin=32*32, hout=10)
+    net.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     batch_size = len(train_data['image'][0])
@@ -51,8 +54,8 @@ def run(layer_n, neuron_info, train_data, test_data, epoch):
     for i in range(epoch):
         running_loss = 0.0
         for j in range((len(train_data))):
-            inputs = train_data['image'][j]
-            labels = train_data['label'][j]
+            inputs = train_data['image'][j].to(device)
+            labels = train_data['label'][j].to(device)
             optimizer.zero_grad()
 
             outputs = net(inputs)
@@ -73,8 +76,8 @@ def run(layer_n, neuron_info, train_data, test_data, epoch):
     total = 0
     with torch.no_grad():
         for data in test_data:
-            inputs = train_data['image'][data]
-            labels = train_data['label'][data]
+            inputs = train_data['image'][data].to(device)
+            labels = train_data['label'][data].to(device)
             outputs = net(inputs)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
