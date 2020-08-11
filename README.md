@@ -6,7 +6,7 @@ Hansung Science High School 2020 Club Project<br/>
 
 ### How to use
 * Please use Python version >= 3.7
-* Please check [requirements](Requirements.md)
+* Please check [requirements](requirements.txt)
 
 ### Club Fossil
 한성과학고등학교 2020년 1학기 인공지능개발반
