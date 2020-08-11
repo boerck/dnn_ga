@@ -8,7 +8,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 class Net(nn.Module):
-    def __init__(self, layer_n, neuron_info, train_data, test_data, epoch, hin, hout):
+    def __init__(self, layer_n, neuron_info, train_data, test_data, epoch, hin=32*32, hout=10):
         """
         :param layer_n: hidden layer number
         :param neuron_info: The number of each neuron placed on the hidden layer
