@@ -21,6 +21,7 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.hin = hin
         self.layer_n = layer_n
+        self.neuron_info = neuron_info
         self.train_data = train_data
         self.test_data = test_data
         self.epoch = epoch
@@ -44,16 +45,17 @@ class Net(nn.Module):
         :return: layer_n;type(int), neuron_info;type(list), batch_size;type(int),
                 accuracy;type(float), train_time;type(float);unit(s), test_time;type(int);unit(ns)
         """
-        net = Net(self.layer_n, self.neuron_info, hin=32*32, hout=10)
+        net = Net(self.layer_n, self.neuron_info, self.train_data, self.test_data, self.epoch, hin=32*32, hout=10)
         net.to(device)
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
         batch_size = len(self.train_data['image'][0])
+        
         # 학습
         train_start = time.time()
         for i in range(self.epoch):
             running_loss = 0.0
-            for j in range((len(self.train_data))):
+            for j in range((len(self.train_data['image']))):
                 inputs = self.train_data['image'][j].to(device)
                 labels = self.train_data['label'][j].to(device)
                 optimizer.zero_grad()
@@ -64,8 +66,8 @@ class Net(nn.Module):
                 optimizer.step()
 
                 running_loss += loss.item()
-                if j % 10 == 0:
-                    print('epoch : [%d] loss: %.3f' % (i+1, running_loss / 10))
+                if i % 5 == 0 and j == 9 :
+                    print('epoch : %d , loss: %.3f' % (i, running_loss / 10))
                     running_loss = 0.0
         train_end = time.time()
         train_time = train_end-train_start
@@ -75,9 +77,9 @@ class Net(nn.Module):
         correct = 0
         total = 0
         with torch.no_grad():
-            for data in self.test_data:
-                inputs = self.train_data['image'][data].to(device)
-                labels = self.train_data['label'][data].to(device)
+            for j in range((len(self.test_data['image']))):
+                inputs = self.test_data['image'][j].to(device)
+                labels = self.test_data['label'][j].to(device)
                 outputs = net(inputs)
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
@@ -87,3 +89,7 @@ class Net(nn.Module):
         test_end = time.time_ns()
         test_time = test_end-test_start
         return self.layer_n, self.neuron_info, batch_size, accuracy, train_time, test_time
+
+# 실행
+nen = Net(4, [32*32, 256, 64, 16, 10], data, data, 100)
+nen.run()
