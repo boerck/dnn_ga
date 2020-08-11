@@ -47,30 +47,29 @@ class custom_dnn:  # dnn class_Makeshift
   """
 def descen_create(stack,dnn_list):
     stck = sorted(stack, key=itemgetter(3))
-    descen_hidden_list = []
+    d_hidden_list = []
     num_dnn = len(stack)
     #int(num_dnn/5-1)
     for i in range(10):
-        descen_hidden_list.append(stck[-10:][i][2])
-    descen_hidden_mean = mean(descen_hidden_list)
-    descen_hidden_standardDeviation = standardDeviation(descen_hidden_list,0)
+        d_hidden_list.append(stck[-10:][i][2])
+    d_hidden_mean = mean(d_hidden_list)
+    d_hidden_standardDeviation = standardDeviation(d_hidden_list,0)
     for t in range(int(num_dnn/3-1)):
-        descen_hidden = int(descen_hidden_standardDeviation * np.random.randn() + descen_hidden_mean)
-        descen_neural_sample_1, descen_neural_sample_2 = rd.sample(stck[-10:],2)
-        descen_neural = []
-        ln1,ln2 = [len(descen_neural_sample_1),len(descen_neural_sample_2)]
+        d_hidden = int(d_hidden_standardDeviation * np.random.randn() + d_hidden_mean)
+        d_neural_s1, d_neural_s2 = rd.sample(stck[-10:],2)
+        d_neural = []
+        ln1,ln2 = [len(d_neural_s1),len(d_neural_s2)]
         s,m = [ln2,ln1] if ln1>ln2 else [ln1,ln2]
-        s_sample= descen_neural_sample_2 if ln1>ln2 else descen_neural_sample_1
+        s_sample= d_neural_s2 if ln1>ln2 else d_neural_s1
         for i in range(m):
             if i<s:
-                descen_neural.append(int(abs(descen_neural_sample_1[i]-descen_neural_sample_2[i])/4 * np.random.randn() \
-                                         + mean([descen_neural_sample_1[i],descen_neural_sample_2[i]])))
+                d_neural.append(int(abs(d_neural_s1[i]-d_neural_s2[i])/4 * np.random.randn() \
+                                         + mean([d_neural_s1[i],d_neural_s2[i]])))
             else:
-                descen_neural.append(s_sample[i])
-        dnn_list[int(stck[t][0])] = custom_dnn(descen_neural,descen_hidden)
-        update_stack(stack,int(stck[t][0]),descen_neural,descen_hidden)
+                d_neural.append(s_sample[i])
+        dnn_list[int(stck[t][0])] = custom_dnn(d_neural,d_hidden)
+        update_stack(stack,int(stck[t][0]),d_neural,d_hidden)
     reset_stack(stack)
-    
 
 def create_stack(dnn_list):  # stack create,reset,update
     stack = [ [i] for i in range(len(dnn_list))]
