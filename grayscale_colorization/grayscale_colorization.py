@@ -18,7 +18,7 @@ def grayscale(train = True):
                                               shuffle=True, num_workers=2)
     
     dataiter = iter(trainloader)
-    data = {'image':torch.zeros((batch_size,32,32)), 'label':torch.zeros((batch_size))}
+    data = {'image':torch.zeros((batch_size,32,32,1)), 'label':torch.zeros((batch_size))}
     #data: 이미지의 텐서값, label을 담고 있는 딕셔너리
     images, labels = dataiter.next()
     
@@ -26,8 +26,9 @@ def grayscale(train = True):
 
         for i in range(1024) :
             #Y = 0.299 * R + 0.587 * G + 0.114 * B
-            data['image'][a][i//32][i%32] = 0.299 * images[a][0][i//32][i%32] + 0.587 * images[a][1][i//32][i%32] + \
+            data['image'][a][i//32][i%32][0] = 0.299 * images[a][0][i//32][i%32] + 0.587 * images[a][1][i//32][i%32] + \
             0.114 * images[a][2][i//32][i%32]
         data['label'][a] = labels[a]
         if a%100 == 0:   #실행된 정도를 나타내는 부분. 지워도 문제 X
             print(a)
+    return data
