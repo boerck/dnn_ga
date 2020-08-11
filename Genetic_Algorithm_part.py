@@ -9,32 +9,42 @@ import math
 # 상위 10개 하위 30% (추후 조정)
 
 def descen_create(param_stack, dnn_list):
-    stack = sorted(param_stack, key=itemgetter(4))
-    batch_size_list = []
-    hidden_list = []
+    stck = sorted(stack, key=itemgetter(4))
+    #descen_batch_size_list = []
+    #descen_hidden_list = []
     num_dnn = len(stack)
-    # int(num_dnn/5-1)
-    for i in range(10):
-        batch_size_list.append(stack[-10:][i][3])
-        hidden_list.append(stack[-10:][i][2])
-    hidden_mean = np.mean(hidden_list)
-    hidden_std = np.std(hidden_list)
-    batch_size_mean = np.mean(hidden_list)
-    batch_size_std = np.std(hidden_list)
-    for t in range(int(num_dnn / 3 - 1)):
-        if rd.random() < 0.01:  # mutant index = 0.1
-            batch_size = rd.randint(1, 8)
+    #int(num_dnn/5-1)
+    #for i in range(10):
+    #    descen_batch_size_list.append(stck[-10:][i][3])
+    #    descen_hidden_list.append(stck[-10:][i][2])
+    #descen_hidden_mean = np.mean(descen_hidden_list)
+    #descen_hidden_standardDeviation = np.std(descen_hidden_list)   
+    #descen_batch_size_mean = np.mean(descen_hidden_list)
+    #descen_batch_size_standardDeviation = np.std(descen_hidden_list)   
+    for t in range(int(num_dnn/3-1)):
+        descen_neural_sample_1, descen_neural_sample_2 = rd.sample(stck[-10:],2)
+        ln1,ln2 = [len(descen_neural_sample_1),len(descen_neural_sample_2)]
+        s,m = [ln2,ln1] if ln1>ln2 else [ln1,ln2]
+        s_sample= descen_neural_sample_2 if ln1>ln2 else descen_neural_sample_1
+        descen_neural = []
+        if rd.random()<0.1: # mutant index = 0.1
+            descen_batch_size = rd.randint(1,8)
         else:
-            batch_size = int(batch_size_std * np.random.randn() + batch_size_mean)
-        if rd.random() < 0.01:  # mutant index = 0.1
-            hidden = rd.randint(2, 5)
+            if rd.random()<0.33:
+                descen_batch_size = descen_neural_sample_1[3] 
+            elif rd.random()<0.5:
+                descen_batch_size = descen_neural_sample_2[3] 
+            else:
+                descen_batch_size = int((descen_neural_sample_1[3] + descen_neural_sample_2[3])/2)
+        if rd.random()<0.1: # mutant index = 0.1
+            descen_hidden = rd.randint(2,5)
         else:
-            hidden = int(hidden_std * np.random.randn() + hidden_mean)
-        neural_sample_1, neural_sample_2 = rd.sample(stack[-10:], 2)
-        neural = []
-        ln1, ln2 = [len(neural_sample_1), len(neural_sample_2)]
-        s, m = [ln2, ln1] if ln1 > ln2 else [ln1, ln2]
-        s_sample = neural_sample_2 if ln1 > ln2 else neural_sample_1
+            if rd.random()<0.33:
+                descen_hidden = descen_neural_sample_1[1]
+            elif rd.random()<0.5:
+                descen_hidden = descen_neural_sample_2[1]
+            else:
+                descen_hidden = int((descen_neural_sample_1[1] + descen_neural_sample_2[1])/2)
         for i in range(m):
             if i < s:
                 if rd.random() < 0.01:  # mutant index = 0.1
