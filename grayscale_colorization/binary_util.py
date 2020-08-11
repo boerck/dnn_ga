@@ -1,5 +1,5 @@
 import pickle
-
+import torch
 
 def save(name1: str, data:dict):
     with open(str('img/'+name1+'.bin'), 'wb') as f:   #img라는 폴더를 미리 만들어야함
