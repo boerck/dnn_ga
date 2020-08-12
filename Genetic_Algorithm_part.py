@@ -20,8 +20,8 @@ class genetic:
             for j in range(param1):
                 param2.append(rd.randint(16, 32 * 32))
 
-            train_data = butil.load("trainset", param3)
-            test_data = butil.load("testset", param3)
+            train_data = butil.load("data_batch_train", param3)
+            test_data = butil.load("data_batch_test", param3)
             epoch = 5
             rt.append([dnn.Net(param1, param2, train_data, test_data, epoch), [param1, param2, param3]])
         return rt
@@ -70,8 +70,8 @@ class genetic:
                     else:
                         neural.append(b_sample[i])
 
-            train_data = butil.load("trainset", batch_size)
-            test_data = butil.load("testset", batch_size)
+            train_data = butil.load("data_batch_train", batch_size)
+            test_data = butil.load("data_batch_test", batch_size)
             epoch = 5
             rt.append([dnn.Net(hidden, neural, train_data, test_data, epoch), [hidden, neural, batch_size]])
         return rt
