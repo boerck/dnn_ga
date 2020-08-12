@@ -86,8 +86,4 @@ class Net(nn.Module):
         accuracy = correct / total
         test_end = time.time_ns()
         test_time = test_end-test_start
-        print('\n<RESULT>')
-        print('Numbers of hidden layer :',self.layer_n,'\nNeuron Structure :', self.neuron_info, 
-              '\nBatch size:', batch_size, '\nAccuracy of the network :', accuracy*100, '%\nTrain Time :',train_time, 
-              's, \nTest Time :',test_time,'ns')
-    
+        return self.layer_n, self.neuron_info, batch_size, accuracy, train_time, test_time
