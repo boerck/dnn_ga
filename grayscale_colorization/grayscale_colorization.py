@@ -1,7 +1,9 @@
+import torch
+import torchvision
+import torchvision.transforms as transforms
+
+
 def grayscale(train: bool):
-    import torch
-    import torchvision
-    import torchvision.transforms as transforms
 
     if train: #train data set
         batch_size = 50000
